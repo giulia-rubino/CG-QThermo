@@ -26,8 +26,8 @@ annih = represent(ad, ndim=Dim, format='numpy')
 N = represent(N, ndim=Dim, format='numpy')
 
 
-H_0 = hbar*omega*(N+np.identity(12)/2)
-#H_0 = hbar*omega*((N+np.identity(12)/2)-chi*(N+np.identity(12)/2)**2-chi/4)
+#H_0 = hbar*omega*(N+np.identity(12)/2)
+H_0 = hbar*omega*((N+np.identity(12)/2)-chi*(N+np.identity(12)/2)**2-chi/4)
 rho_0 = expm(-beta*H_0)/np.trace(expm(-beta*H_0))
 
 CGfactor = 3
@@ -52,4 +52,4 @@ df = pd.DataFrame(rho_0_CG)
 sns.heatmap(df, cmap="YlGnBu", linewidths=0.5, linecolor='gray', annot=True, annot_kws={"size": 12})
 
 plt.show()
-fig.savefig("rho0_CoarseGrained.pdf")
+fig.savefig("rho0_CoarseGrained_Morse.pdf")

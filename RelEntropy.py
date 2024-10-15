@@ -20,7 +20,7 @@ T = 10
 Dim = 12
 beta = 1/(k_B*T)
 Force = 6
-chi = 0.1
+chi = 1
 
 ad = RaisingOp('a')
 a = LoweringOp('a')
@@ -39,11 +39,12 @@ for k in range(Iter):
 	f = k*Force/Iter
 	F[k] = k*Force/Iter
 
-	H_0 = hbar*omega*(N+np.identity(Dim)/2)
-	#H_0 = hbar*omega*((N+np.identity(12)/2)-chi*(N+np.identity(12)/2)**2-chi/4)
+	#H_0 = hbar*omega*(N+np.identity(Dim)/2)
+	H_0 = hbar*omega*((N+np.identity(12)/2)-chi*(N+np.identity(12)/2)**2-chi/4)
 	rho_0 = expm(-beta*H_0)/np.trace(expm(-beta*H_0))
 
-	H_tau = hbar*omega*(N+np.identity(12)/2) + f*(creat + annih)/np.sqrt(2)
+	#H_tau = hbar*omega*(N+np.identity(12)/2) + f*(creat + annih)/np.sqrt(2)
+	H_tau = hbar*omega*((N+np.identity(12)/2)-chi*(N+np.identity(12)/2)**2-chi/4) + f*(creat + annih)/np.sqrt(2)
 
 	eigenvalues, eigenvectors = np.linalg.eig(H_tau)
 	R = eigenvectors
@@ -92,4 +93,4 @@ plt.xticks(fontsize=32)
 plt.yticks(fontsize=32)
 plt.legend(prop={"size":32})
 plt.show()
-fig.savefig("RelEntropy.pdf")
+fig.savefig("RelEntropy_Morse.pdf")
