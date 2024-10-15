@@ -33,7 +33,8 @@ creat = represent(a, ndim=12, format='numpy')
 annih = represent(ad, ndim=12, format='numpy')
 N = represent(N, ndim=12, format='numpy')
 
-H_0 = hbar*omega*((N+np.identity(12)/2)-chi*(N+np.identity(12)/2)**2-chi/4)
+H_0 = hbar*omega*(N+np.identity(12)/2)
+#H_0 = hbar*omega*((N+np.identity(12)/2)-chi*(N+np.identity(12)/2)**2-chi/4)
 rho_0 = expm(-beta*H_0)/np.trace(expm(-beta*H_0))
 
 rho_0[abs(rho_0) < 9*10**(-4)] = 0
