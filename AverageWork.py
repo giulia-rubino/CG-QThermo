@@ -31,8 +31,10 @@ annih = represent(ad, ndim=Dim, format='numpy')
 N = represent(N, ndim=Dim, format='numpy')
 
 Iter = 50
-RelEnt = np.zeros(Iter)
-RelEnt1 = np.zeros((Iter,Iter))
+AvWork = np.zeros(Iter)
+AvWork1 = np.zeros((Iter,Iter))
+DissWork = np.zeros(Iter)
+DissWork1 = np.zeros((Iter,Iter))
 F = np.zeros(Iter)
 
 for k in range(Iter):
@@ -74,19 +76,29 @@ for k in range(Iter):
 			rho_tau_CG = rho_tau_CG + np.trace(rho_tau_Rot*P[i,:,:])/CGfactor*P[i,:,:]
 			rho_0_CG = rho_0_CG + np.trace(rho_0*P[i,:,:])/CGfactor*P[i,:,:]
 
-		RelEnt1[l,k] = np.trace(H_tau_diag@rho_tau_CG)-np.trace(H_0@rho_0_CG)
+		AvWork1[l,k] = np.trace(H_tau_diag@rho_tau_CG)-np.trace(H_0@rho_0_CG)
+		FE = -np.log(np.trace(expm(-beta*H_0)))/beta
+		FE1 = -np.log(np.trace(expm(-beta*H_tau_diag)))/beta
+		DeltaF = FE1 - FE
+		DissWork1[l,k] = beta*(AvWork1[l,k] - DeltaF)
 
-	RelEnt[k] = np.trace(H_tau_diag@rho_tau_Rot)-np.trace(H_0@rho_0)
+	AvWork[k] = np.trace(H_tau_diag@rho_tau_Rot)-np.trace(H_0@rho_0)
+	DissWork[k] = beta*(AvWork[k] - DeltaF)
 
 	#print(rho_tau_CG3)
 	#print(rho_tauTH_CG3)
 
 fig = plt.figure(facecolor="white", figsize=(12,9))
 
-pylab.plot(F,RelEnt, color="#7695FF", alpha = 0.7, label=r'$\langle W \rangle$', linewidth=5)
-pylab.plot(F,RelEnt1[0,:], color="#9DBDFF", alpha = 0.7, label=r'$\langle \breve{W} \rangle$, Tr($P_J$=2)', linewidth=5)
-pylab.plot(F,RelEnt1[1,:], color="#FFD7C4", alpha = 0.7, label=r'$\langle \breve{W} \rangle$, Tr($P_J$=3)', linewidth=5)
-pylab.plot(F,RelEnt1[2,:], color="#FF9874", alpha = 0.7, label=r'$\langle \breve{W} \rangle$, Tr($P_J$=4)', linewidth=5)
+pylab.plot(F,AvWork, color="#7695FF", alpha = 0.7, label=r'$\langle W \rangle$', linewidth=5)
+pylab.plot(F,AvWork1[0,:], color="#9DBDFF", alpha = 0.7, label=r'$\langle \breve{W} \rangle$, Tr($P_J$=2)', linewidth=5)
+pylab.plot(F,AvWork1[1,:], color="#FFD7C4", alpha = 0.7, label=r'$\langle \breve{W} \rangle$, Tr($P_J$=3)', linewidth=5)
+pylab.plot(F,AvWork1[2,:], color="#FF9874", alpha = 0.7, label=r'$\langle \breve{W} \rangle$, Tr($P_J$=4)', linewidth=5)
+
+#pylab.plot(F,DissWork, color="#7695FF", alpha = 0.7, label=r'$\beta(\langle W \rangle - \Delta F)$', linewidth=5)
+#pylab.plot(F,DissWork1[0,:], color="#9DBDFF", alpha = 0.7, label=r'$\beta(\langle \breve{W} \rangle - \Delta F)$, Tr($P_J$=2)', linewidth=5)
+#pylab.plot(F,DissWork1[1,:], color="#FFD7C4", alpha = 0.7, label=r'$\beta(\langle \breve{W} \rangle - \Delta F)$, Tr($P_J$=3)', linewidth=5)
+#pylab.plot(F,DissWork1[2,:], color="#FF9874", alpha = 0.7, label=r'$\beta(\langle \breve{W} \rangle - \Delta F)$, Tr($P_J$=4)', linewidth=5)
 
 #plt.xscale('log')
 
@@ -99,3 +111,4 @@ plt.yticks(fontsize=32)
 plt.legend(prop={"size":32})
 plt.show()
 fig.savefig("AverageWork.pdf")
+#fig.savefig("DissipativeWork.pdf")
