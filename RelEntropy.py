@@ -57,7 +57,7 @@ for k in range(Iter):
 	rho_tau_Rot = inv(R)@rho_tau@R
 
 	rho_tauTH_CG = np.zeros((Dim,Dim))
-	rho_tau_CG = np.zeros((Dim,Dim))
+	rho_0_CG = np.zeros((Dim,Dim))
 
 	for l in range(3):
 		CGfactor = l + 2
@@ -70,14 +70,14 @@ for k in range(Iter):
 
 		for i in range(Dim1):
 			rho_tauTH_CG = rho_tauTH_CG + np.trace(rho_tauTH*P[i,:,:])/CGfactor*P[i,:,:]
-			rho_tau_CG = rho_tau_CG + np.trace(rho_tau_Rot*P[i,:,:])/CGfactor*P[i,:,:]
+			rho_0_CG = rho_0_CG + np.trace(rho_0*P[i,:,:])/CGfactor*P[i,:,:]
+			rho_tau1 = np.real(U@rho_0_CG@Udag)
+			rho_tau_CG  = inv(R)@rho_tau1@R
+
 
 		RelEnt1[l,k] = S(rho_tau_CG, rho_tauTH_CG)
 
 	RelEnt[k] = S(rho_tau_Rot, rho_tauTH)
-
-	#print(rho_tau_CG3)
-	#print(rho_tauTH_CG3)
 
 fig = plt.figure(facecolor="white", figsize=(12,9))
 
@@ -86,10 +86,6 @@ pylab.plot(F,RelEnt1[0,:], color="#9DBDFF", alpha = 0.7, label=r'$S\left(\breve{
 pylab.plot(F,RelEnt1[1,:], color="#FFD7C4", alpha = 0.7, label=r'$S\left(\breve{\rho}_\tau \vert \vert \breve{\rho}_\tau^{th} \right)$, Tr($P_J$=3)', linewidth=5)
 pylab.plot(F,RelEnt1[2,:], color="#FF9874", alpha = 0.7, label=r'$S\left(\breve{\rho}_\tau \vert \vert \breve{\rho}_\tau^{th} \right)$, Tr($P_J$=4)', linewidth=5)
 
-#plt.xscale('log')
-
-#plt.xlim([0.1, 40])
-#plt.ylim([0, 80])
 
 plt.xlabel(r'Driving force $f$', size=32)
 plt.xticks(fontsize=32)
