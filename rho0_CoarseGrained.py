@@ -25,7 +25,9 @@ creat = represent(a, ndim=Dim, format='numpy')
 annih = represent(ad, ndim=Dim, format='numpy')
 N = represent(N, ndim=Dim, format='numpy')
 
-H_0 = hbar*omega*((N+np.identity(12)/2)-chi*(N+np.identity(12)/2)**2-chi/4)
+
+H_0 = hbar*omega*(N+np.identity(12)/2)
+#H_0 = hbar*omega*((N+np.identity(12)/2)-chi*(N+np.identity(12)/2)**2-chi/4)
 rho_0 = expm(-beta*H_0)/np.trace(expm(-beta*H_0))
 
 CGfactor = 3
